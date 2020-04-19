@@ -41,6 +41,43 @@ Vue.component('app-footer', {
     }
 })
 
+Vue.component('news-list', {
+    template: `
+                <div class="row" style="margin-left:80px">
+                        <div v-for="(article, index) in articles" v-if="index < 9" >
+                                <div  class="col-lg-10 news card cardme both">
+                                <ul class="news__list  card-body" style="list-style-type:none">
+                                <li  class="news__item card-title"> {{ article.title }} </li>
+                                <img style="width:100%" v-bind:src="article.urlToImage">
+                                <br/>
+                                <li class="news__item card-text"> {{ article.description }} </li>
+                                </ul>
+                                </div>
+                            <br/>
+                        </div>
+                </div>
+    `,
+
+    created: function() {
+        let self = this;
+
+        fetch('https://newsapi.org/v2/top-headlines?country=us&apiKey=60b1d42f5489434493779aa257b87b23')
+        .then(function(response) {
+        return response.json();
+        })
+        .then(function(data) {
+            console.log(data);
+            self.articles = data.articles;
+        });
+    },
+
+    data: function() {
+        return {
+            articles: []
+        }
+    }
+ });
+
 
 let app = new Vue({
     el: '#app',

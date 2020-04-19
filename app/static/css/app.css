@@ -5,3 +5,22 @@ body {
 footer  {
     padding-top: 20px;
 }
+
+.cardme {
+  box-shadow: 0 5px 10px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  width:400px;
+  border-radius:15px;
+  border-top:6px solid blue;
+}
+
+.cardme:hover {
+  box-shadow: 0 12px 20px 0 rgba(0,0,0,0.9);
+}
+
+.both{
+    margin-left:20px;
+    margin-right:20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
