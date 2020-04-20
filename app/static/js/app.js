@@ -11,10 +11,10 @@ Vue.component('app-header', {
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                   <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    <router-link to="/" class="nav-link">Home</router-link>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#">News</a>
+                    <router-link to="/news" class="nav-link">News</router-link>
                   </li>
                 </ul>
               </div>
@@ -41,10 +41,19 @@ Vue.component('app-footer', {
     }
 })
 
-Vue.component('news-list', {
+const NewsList = Vue.component('news-list', {
     template: `
+                <div class="form-inline d-flex justify-content-center">
+                        <div class="form-group mx-sm-3 mb-2">
+                            <label class="sr-only" for="search">Search</label>
+                            <input type="search" name="search" v-model="searchTerm" id="search" class="form-control mb-2 mr-sm-2" placeholder="Enter search term here" />
+                            <button class="btn btn-primary mb-2" v-on:click="searchNews">Search</button>
+                        </div>
+
+
+
                 <div class="row" style="margin-left:80px">
-                        <div v-for="(article, index) in articles" v-if="index < 9" >
+                        <div v-for="(article, index) in articles"  v-if=" index < 18">
                                 <div  class="col-lg-10 news card cardme both">
                                 <ul class="news__list  card-body" style="list-style-type:none">
                                 <li  class="news__item card-title"> {{ article.title }} </li>
@@ -55,13 +64,15 @@ Vue.component('news-list', {
                                 </div>
                             <br/>
                         </div>
+
                 </div>
+        </div>
     `,
 
     created: function() {
         let self = this;
 
-        fetch('https://newsapi.org/v2/top-headlines?country=us&apiKey=60b1d42f5489434493779aa257b87b23')
+        fetch('https://newsapi.org/v2/top-headlines?country=us&apiKey=YOUR API KEY')
         .then(function(response) {
         return response.json();
         })
@@ -73,16 +84,60 @@ Vue.component('news-list', {
 
     data: function() {
         return {
-            articles: []
+            articles: [],
+            searchTerm: ''
+        }
+    },
+
+    methods: {
+        searchNews: function() {
+        let self = this;
+        fetch('https://newsapi.org/v2/everything?q='+ self.searchTerm + '&language=en&apiKey=YOUR API KEY')
+            .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            console.log(data);
+            self.articles = data.articles;
+            });
         }
     }
  });
 
+ const Home = Vue.component('home', {
+                template: `
 
-let app = new Vue({
+                        <div class="home">
+                            <div class="container">
+                                <div class="text-center">
+                                <img src="/static/images/logo.png" alt="VueJS Logo">
+                                <h1>{{ welcome }}</h1>
+                                </div>
+                            </div>
+                        </div>
+
+                `,
+
+
+    data: function() {
+
+            return {
+                    welcome: 'Hello World! Welcome to VueJS'
+                    }
+                }
+});
+
+const router = new VueRouter({
+                mode: 'history',
+                routes: [
+                    { path: '/', component: Home },
+                    { path: '/news', component: NewsList }
+                ]
+    });
+
+
+const app = new Vue({
     el: '#app',
-    data: {
-        welcome: 'Hello World! Welcome to VueJS'
-    }
+    router
 });
 
